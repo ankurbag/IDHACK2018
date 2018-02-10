@@ -3,6 +3,7 @@ package edu.neu.dreamapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +15,14 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,6 +39,7 @@ import edu.neu.dreamapp.model.News;
  * @version v1.0
  */
 public class Reports extends BaseFragment {
+    private static final String ASSET_PATH = "file:///android_asset/";
     private static final String CLASS_TAG = "Reports";
 
     @BindView(R.id.news_list)
@@ -116,6 +122,15 @@ public class Reports extends BaseFragment {
             return new Reports.NewsViewHolder(v);
         }
 
+        private byte[] loadHTMLasByteArray(InputStream in) throws IOException {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            for (int count; (count = in.read(buffer)) != -1; ) {
+                out.write(buffer, 0, count);
+            }
+            return out.toByteArray();
+        }
+
         @Override
         @SuppressWarnings("all")
         public void onBindViewHolder(Reports.NewsViewHolder newsViewHolder, final int i) {
@@ -124,7 +139,24 @@ public class Reports extends BaseFragment {
             newsViewHolder.newsImage.getSettings().setLoadsImagesAutomatically(true);
             newsViewHolder.newsImage.getSettings().setJavaScriptEnabled(true);
             newsViewHolder.newsImage.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-            newsViewHolder.newsImage.loadUrl("https://www.google.com/");
+
+            /* Read Chart HTML */
+            String fileContent = "";
+            try {
+                AssetManager assetManager = getActivity().getAssets();
+                InputStream in = assetManager.open("piechart.html");
+                byte[] bytes = loadHTMLasByteArray(in);
+                fileContent = new String(bytes, "UTF-8");
+            } catch (IOException ex) {
+                Toast.makeText(getContext(), "Failed To Load Google Charts!", Toast.LENGTH_LONG).show();
+            }
+            final String content = fileContent;
+            String[] nums = news.get(i).getContent().split("\n");
+            String formattedContent = content.replace("[#DataTable#]", "['Attendance','Percentage'],['Present',"
+                    + Integer.parseInt(nums[0].split(": ")[1])
+                    + "],['Absent',"
+                    + Integer.parseInt(nums[1].split(": ")[1]) + "]");
+            newsViewHolder.newsImage.loadDataWithBaseURL(ASSET_PATH, formattedContent, "text/html", "UTF-8", null);
             newsViewHolder.newsHeader.setText(news.get(i).getHeader());
             newsViewHolder.newsAuthor.setText(news.get(i).getAuthor());
             newsViewHolder.newsContent.setText(news.get(i).getContent());
