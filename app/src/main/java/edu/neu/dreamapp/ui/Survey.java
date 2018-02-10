@@ -8,7 +8,7 @@ import android.widget.Button;
 import butterknife.BindView;
 import edu.neu.dreamapp.R;
 import edu.neu.dreamapp.base.BaseFragment;
-import edu.neu.dreamapp.survey.SurveyActivity;
+import edu.neu.dreamapp.survey.SurveyStartActivity;
 
 /**
  * @author agrawroh
@@ -36,7 +36,7 @@ public class Survey extends BaseFragment {
         btnTakeSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity().getApplicationContext(), SurveyActivity.class));
+                startActivity(new Intent(getActivity().getApplicationContext(), SurveyStartActivity.class));
             }
         });
     }

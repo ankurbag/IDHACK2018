@@ -25,6 +25,11 @@
         <activity
             android:name=".survey.SurveyActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Survey Start Activity -->
+        <activity
+            android:name=".survey.SurveyStartActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

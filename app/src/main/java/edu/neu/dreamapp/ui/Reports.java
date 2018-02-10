@@ -82,7 +82,7 @@ public class Reports extends BaseFragment {
         SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
 
         /* Get Responses */
-        Set<String> set = prefs.getStringSet("SR_RESP_SET", new HashSet<String>());
+        Set<String> set = prefs.getStringSet("SR_RESP_SET_PRE", new HashSet<String>());
         Log.i("*****", String.valueOf(set.size()));
         if (0 < set.size()) {
             List<News> newsRecords = new ArrayList<>();

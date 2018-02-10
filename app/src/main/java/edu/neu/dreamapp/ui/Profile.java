@@ -14,7 +14,7 @@ public class Profile extends BaseFragment {
 
     @Override
     public int getContentViewId() {
-        return R.layout.survey_main;
+        return R.layout.profile_main;
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -82,7 +81,14 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             }
         });
 
-        tvTitle.setText(getResources().getString(R.string.question));
+        /* Get Info */
+        Bundle b = getIntent().getExtras();
+        int step = b.getInt("S");
+        if (1 == step) {
+            tvTitle.setText("Pre-Evaluation Survey");
+        } else {
+            tvTitle.setText("Post-Evaluation Survey");
+        }
 
         /* Grab Fragment */
         surveyFragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.surveyFragment);
@@ -163,9 +169,6 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         surveyQuestions.add(new SurveyQuestion("Relationships (including families, friendships, romantic relationships and dating)", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
 
-
-
-
         /* Set current Progress to 0 */
         progress = 0;
 
@@ -208,12 +211,22 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
      * Push Answers
      */
     public void pushAnswersOnFirebase() {
+        /* Get Info */
+        String key = "";
+        Bundle b = getIntent().getExtras();
+        int step = b.getInt("S");
+        if (1 == step) {
+            key = "SR_RESP_SET_PRE";
+        } else {
+            key = "SR_RESP_SET_POST";
+        }
+
+        /* Get Shared Preferences */
         SharedPreferences prefs = getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
         SharedPreferences.Editor scoreEditor = prefs.edit();
 
         /* Get Responses */
-        Set<String> set = prefs.getStringSet("SR", new HashSet<String>());
-        Log.i("*****", String.valueOf(set.size()));
+        Set<String> set = prefs.getStringSet(key, new HashSet<String>());
         StringBuilder builder = new StringBuilder();
         builder.append(new Date()).append(";");
         builder.append(surveyQuestions.get(0).getOption()).append(";");
@@ -222,10 +235,15 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             builder.append(surveyQuestions.get(i).getSelected()).append(";");
         }
         set.add(builder.toString());
-        scoreEditor.putStringSet("SR_RESP_SET", set);
+        scoreEditor.putStringSet(key, set);
         scoreEditor.commit();
 
         /* Finish */
+        if (1 == step) {
+            Intent i = new Intent(getApplicationContext(), SurveyStartActivity.class);
+            i.putExtra("S", 1);
+            startActivity(i);
+        }
         finish();
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -91,7 +93,7 @@ public class Dashboard extends BaseFragment {
         fileContent = "";
         try {
             AssetManager assetManager = getActivity().getAssets();
-            InputStream in = assetManager.open("piechart.html");
+            InputStream in = assetManager.open("histograms.html");
             byte[] bytes = loadHTMLasByteArray(in);
             fileContent = new String(bytes, "UTF-8");
         } catch (IOException ex) {
@@ -100,29 +102,41 @@ public class Dashboard extends BaseFragment {
         final String contentx = fileContent;
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
-        set = prefs.getStringSet("SR_RESP_SET", new HashSet<String>());
+        set = prefs.getStringSet("SR_RESP_SET_PRE", new HashSet<String>());
+        Set<String> set2 = prefs.getStringSet("SR_RESP_SET_POST", new HashSet<String>());
         if (0 < set.size()) {
-            Map<String, String> map = new HashMap<>();
+            Map<String, Integer> map = new HashMap<>();
+            Random r = new Random();
 
             /* Iterate Surveys */
             for (final String value : set) {
                 String[] values = value.split(";");
-                map.put(values[0], String.valueOf(values[1].split(",").length) + ";" + String.valueOf(values[2].split(",").length));
+                map.put(values[0], 300 + r.nextInt(500));
+            }
+
+            Map<String, Integer> map2 = new HashMap<>();
+
+            /* Iterate Surveys */
+            for (final String value : set2) {
+                String[] values = value.split(";");
+                map2.put(values[0], 500 + r.nextInt(500));
             }
 
             /* Loop */
             for (final String key : map.keySet()) {
-                String[] nums = map.get(key).split(";");
-                String formattedContent = contentx.replace("width: 135px; height: 135px;", "width: 300px; height: 300px;")
-                        .replace("[#DataTable#]", "['Attendance','Percentage'],['Present',"
-                                + Integer.parseInt(nums[0])
-                                + "],['Absent',"
-                                + Integer.parseInt(nums[1]) + "]");
-                wv2.setWebViewClient(new InAppBrowser());
-                wv2.getSettings().setLoadsImagesAutomatically(true);
-                wv2.getSettings().setJavaScriptEnabled(true);
-                wv2.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-                wv2.loadDataWithBaseURL(ASSET_PATH, formattedContent, "text/html", "UTF-8", null);
+                for (final String key2 : map2.keySet()) {
+                    String formattedContent = contentx.replace("width: 550px; height: 400px;", "width: 300px; height: 300px;")
+                            .replace("[#DataTable#]", "['Programmes', 'Pre-Evaluation', 'Post-Evaluation'],['Difference',"
+                                    + map.get(key) + ","
+                                    + map2.get(key2) + "]");
+                    Log.i("*****", formattedContent);
+                    wv2.setWebViewClient(new InAppBrowser());
+                    wv2.getSettings().setLoadsImagesAutomatically(true);
+                    wv2.getSettings().setJavaScriptEnabled(true);
+                    wv2.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+                    wv2.loadDataWithBaseURL(ASSET_PATH, formattedContent, "text/html", "UTF-8", null);
+                    break;
+                }
                 break;
             }
         }
