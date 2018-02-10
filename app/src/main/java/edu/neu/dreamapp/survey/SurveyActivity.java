@@ -135,14 +135,34 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
                 Arrays.asList("Peter", "Roger", "Harry", "Charlie")));
 
         /* Questions */
-        surveyQuestions.add(new SurveyQuestion("How would you rate your overall health and wellness?", "",
+        surveyQuestions.add(new SurveyQuestion("Are you happy to be at\n" +
+                "this school?", "",
                 Arrays.asList("Excellent", "Good", "Fair", "Poor")));
-        surveyQuestions.add(new SurveyQuestion("Counting sessions of at least 10 minutes, how many minutes of accumulated physical activity do you participate in weekly?", "",
+        surveyQuestions.add(new SurveyQuestion("Do you feel like you are\n" +
+                "part of this school?", "",
                 Arrays.asList("I am not physically active", "less than 75 minutes", "75 - 149 minutes", "150 - 300 minutes", "more than 300 minutes")));
         surveyQuestions.add(new SurveyQuestion("How many days per week do you participate in stretching exercises?", "",
                 Arrays.asList("I do not stretch often, if ever", "1 day/week", "2 days/week", "3 or more days/week")));
-        surveyQuestions.add(new SurveyQuestion("How many days each week do you participate in strength-building or resistance training exercises? Each session needs to be at least 10 minutes in length.", "",
+        surveyQuestions.add(new SurveyQuestion("Do adults at this school\n" +
+                "treat students with respect?", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
+
+        surveyQuestions.add(new SurveyQuestion("Do other kids at this\n" +
+                "school spread mean rumors\n" +
+                "or lies about you?", "",
+                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
+
+        surveyQuestions.add(new SurveyQuestion("Do other kids at this\n" +
+                "school ever tease you about\n" +
+                "the way you talk, walk, or\n" +
+                "dress?", "",
+                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
+
+        surveyQuestions.add(new SurveyQuestion("Relationships (including families, friendships, romantic relationships and dating)", "",
+                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
+
+
+
 
         /* Set current Progress to 0 */
         progress = 0;
