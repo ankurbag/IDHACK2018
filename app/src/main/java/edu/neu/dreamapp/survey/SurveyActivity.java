@@ -215,7 +215,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         Set<String> set = prefs.getStringSet("SR", new HashSet<String>());
         Log.i("*****", String.valueOf(set.size()));
         StringBuilder builder = new StringBuilder();
-        builder.append(new Date().getTime()).append(";");
+        builder.append(new Date()).append(";");
         builder.append(surveyQuestions.get(0).getOption()).append(";");
         builder.append(surveyQuestions.get(0).getSelected()).append(";");
         for (int i = 1; i < surveyQuestions.size(); i++) {
