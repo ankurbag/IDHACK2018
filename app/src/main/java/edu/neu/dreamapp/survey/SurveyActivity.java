@@ -208,7 +208,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
      * Push Answers
      */
     public void pushAnswersOnFirebase() {
-        SharedPreferences prefs = getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
         SharedPreferences.Editor scoreEditor = prefs.edit();
 
         /* Get Responses */
@@ -222,7 +222,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             builder.append(surveyQuestions.get(i).getSelected()).append(";");
         }
         set.add(builder.toString());
-        scoreEditor.putStringSet("SR", set);
+        scoreEditor.putStringSet("SR_RESP_SET", set);
         scoreEditor.commit();
 
         /* Finish */

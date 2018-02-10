@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.cjj.MaterialRefreshListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -52,37 +54,49 @@ public class Reports extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
+        /* Set Recycler View */
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
         /* Setup RefreshLayout Listener, When Page Refreshes, Load Again */
         refreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
-                rv.setLayoutManager(new LinearLayoutManager(context));
-                SharedPreferences prefs = getActivity().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
-
-                /* Get Responses */
-                Set<String> set = prefs.getStringSet("SR", null);
-                if (null != set) {
-                    List<News> newsRecords = new ArrayList<>();
-
-                    /* Iterate Surveys */
-                    for (final String value : set) {
-                        String[] values = value.split(";");
-
-                        News n = new News();
-                        n.setHeader("Survey Response");
-                        n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
-                        n.setContent("Total Students: " + values[1].split(",").length
-                                + "\n"
-                                + "Students Present: " + values[2].split(",").length);
-                        newsRecords.add(n);
-                    }
-                    rv.setAdapter(new Reports.NewsListAdapter(newsRecords));
-                }
+                /* Load Data */
+                loadData();
             }
         });
 
         /* Auto Refreshes The Layout In-Order To Fetch The NEWS */
         refreshLayout.autoRefresh();
+    }
+
+    /**
+     * Load Data
+     */
+    private void loadData() {
+        SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+
+        /* Get Responses */
+        Set<String> set = prefs.getStringSet("SR_RESP_SET", new HashSet<String>());
+        Log.i("*****", String.valueOf(set.size()));
+        if (0 < set.size()) {
+            List<News> newsRecords = new ArrayList<>();
+
+            /* Iterate Surveys */
+            for (final String value : set) {
+                String[] values = value.split(";");
+
+                News n = new News();
+                n.setHeader("Survey Response");
+                n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
+                n.setContent("Total Students: " + values[1].split(",").length
+                        + "\n"
+                        + "Students Present: " + values[2].split(",").length);
+                newsRecords.add(n);
+            }
+            rv.setAdapter(new Reports.NewsListAdapter(newsRecords));
+            refreshLayout.finishRefresh();
+        }
     }
 
     /**
