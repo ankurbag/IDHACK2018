@@ -1,5 +1,7 @@
 package edu.neu.dreamapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,6 +53,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
+        SharedPreferences prefs = getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+        SharedPreferences.Editor scoreEditor = prefs.edit();
+        scoreEditor.putStringSet("SR", null);
+        scoreEditor.commit();
+        */
     }
 
     @Override

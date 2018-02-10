@@ -10,14 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -51,15 +52,12 @@ public class Reports extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
-
-
         /* Setup RefreshLayout Listener, When Page Refreshes, Load Again */
         refreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
                 rv.setLayoutManager(new LinearLayoutManager(context));
                 SharedPreferences prefs = getActivity().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
-                SharedPreferences.Editor scoreEditor = prefs.edit();
 
                 /* Get Responses */
                 Set<String> set = prefs.getStringSet("SR", null);
@@ -68,10 +66,14 @@ public class Reports extends BaseFragment {
 
                     /* Iterate Surveys */
                     for (final String value : set) {
+                        String[] values = value.split(";");
+
                         News n = new News();
                         n.setHeader("Survey Response");
-                        n.setAuthor("Date: 2/10/2018");
-                        n.setContent(value);
+                        n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
+                        n.setContent("Total Students: " + values[1].split(",").length
+                                + "\n"
+                                + "Students Present: " + values[2].split(",").length);
                         newsRecords.add(n);
                     }
                     rv.setAdapter(new Reports.NewsListAdapter(newsRecords));
@@ -104,9 +106,11 @@ public class Reports extends BaseFragment {
         @SuppressWarnings("all")
         public void onBindViewHolder(Reports.NewsViewHolder newsViewHolder, final int i) {
             /* Set Attributes */
-            if (null != news.get(i).getImage() && !"".equalsIgnoreCase(news.get(i).getImage())) {
-                Picasso.with(getActivity().getApplicationContext()).load(news.get(i).getImage()).resize(135, 135).centerCrop().into(newsViewHolder.newsImage);
-            }
+            newsViewHolder.newsImage.setWebViewClient(new InAppBrowser());
+            newsViewHolder.newsImage.getSettings().setLoadsImagesAutomatically(true);
+            newsViewHolder.newsImage.getSettings().setJavaScriptEnabled(true);
+            newsViewHolder.newsImage.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+            newsViewHolder.newsImage.loadUrl("https://www.google.com/");
             newsViewHolder.newsHeader.setText(news.get(i).getHeader());
             newsViewHolder.newsAuthor.setText(news.get(i).getAuthor());
             newsViewHolder.newsContent.setText(news.get(i).getContent());
@@ -137,7 +141,7 @@ public class Reports extends BaseFragment {
      * News View Holder
      */
     class NewsViewHolder extends RecyclerView.ViewHolder {
-        private ImageView newsImage;
+        private WebView newsImage;
         private TextView newsHeader;
         private TextView newsAuthor;
         private TextView newsContent;
@@ -150,6 +154,17 @@ public class Reports extends BaseFragment {
             newsHeader = itemView.findViewById(R.id.news_header);
             newsAuthor = itemView.findViewById(R.id.news_author);
             newsContent = itemView.findViewById(R.id.news_body);
+        }
+    }
+
+    /**
+     * InApp Browser
+     */
+    private class InAppBrowser extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
         }
     }
 }

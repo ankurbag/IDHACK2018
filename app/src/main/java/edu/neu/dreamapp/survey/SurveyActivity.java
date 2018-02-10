@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -211,7 +213,11 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
 
         /* Get Responses */
         Set<String> set = prefs.getStringSet("SR", new HashSet<String>());
+        Log.i("*****", String.valueOf(set.size()));
         StringBuilder builder = new StringBuilder();
+        builder.append(new Date().getTime()).append(";");
+        builder.append(surveyQuestions.get(0).getOption()).append(";");
+        builder.append(surveyQuestions.get(0).getSelected()).append(";");
         for (int i = 1; i < surveyQuestions.size(); i++) {
             builder.append(surveyQuestions.get(i).getSelected()).append(";");
         }
