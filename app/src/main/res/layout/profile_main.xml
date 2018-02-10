@@ -16,13 +16,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        android:src="@drawable/survey" />
+        android:src="@drawable/user_icon" />
 
-    <Button
+    <TextView
         android:id="@+id/btnTakeSurvey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:text="Start Survey" />
+        android:text="Rohit Agrawal"
+        android:textSize="20sp" />
 </LinearLayout>

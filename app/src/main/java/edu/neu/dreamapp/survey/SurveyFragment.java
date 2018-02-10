@@ -151,15 +151,6 @@ public class SurveyFragment extends BaseFragment {
         /* First remove all child views in radioGroup */
         cbGroup.refresh();
         buttonCount = 0;
-
-        /* Overwrite onCheckedChangeListener for radioGroup and make it do nothing
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                /* Do nothing in order for assigning new one later on
-            }
-        });
-        */
     }
 
     /**

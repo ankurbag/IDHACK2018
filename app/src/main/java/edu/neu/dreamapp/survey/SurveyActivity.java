@@ -2,7 +2,9 @@ package edu.neu.dreamapp.survey;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -14,7 +16,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import edu.neu.dreamapp.MainActivity;
@@ -76,13 +81,20 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             }
         });
 
-        tvTitle.setText(getResources().getString(R.string.question));
+        /* Get Info */
+        Bundle b = getIntent().getExtras();
+        int step = b.getInt("S");
+        if (1 == step) {
+            tvTitle.setText("Pre-Evaluation Survey");
+        } else {
+            tvTitle.setText("Post-Evaluation Survey");
+        }
 
         /* Grab Fragment */
         surveyFragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.surveyFragment);
         surveyFragment.setSelectionCallback(this);
 
-        btnNext.setEnabled(false);
+        btnNext.setEnabled(true);
 
         /* Next Question Button */
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -128,16 +140,28 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         surveyQuestions = new ArrayList<>();
         /* Attendance */
         surveyQuestions.add(new SurveyQuestion("Attendance", "",
-                Arrays.asList("Peter", "Roger", "Harry", "Charlie")));
+                Arrays.asList("Adalquiris", "Jhon Olivo", "Elvis Manuel", "Elianny", "Adelyn Sanchez", "Samuel Arturo")));
 
         /* Questions */
-        surveyQuestions.add(new SurveyQuestion("How would you rate your overall health and wellness?", "",
+        surveyQuestions.add(new SurveyQuestion("1. Tener relaciones sexuales con una persona mayor que t˙ (5 aÒos o·s) te pone en peligro de contagiarse del VIH.\n\n" +
+                "1. Have sex with a person older than you (5 years or\n" +
+                "more) puts you in danger of getting HIV.", "",
                 Arrays.asList("Excellent", "Good", "Fair", "Poor")));
-        surveyQuestions.add(new SurveyQuestion("Counting sessions of at least 10 minutes, how many minutes of accumulated physical activity do you participate in weekly?", "",
+
+        surveyQuestions.add(new SurveyQuestion("2. Los condones funcionan para prevenir el VIH/SIDA.\n\n" +
+                "2. Condoms work to prevent HIV / AIDS.", "",
                 Arrays.asList("I am not physically active", "less than 75 minutes", "75 - 149 minutes", "150 - 300 minutes", "more than 300 minutes")));
-        surveyQuestions.add(new SurveyQuestion("How many days per week do you participate in stretching exercises?", "",
+
+        surveyQuestions.add(new SurveyQuestion("3. Una persona que se ve sana puede tener el VIH.\n\n" +
+                "3. A person who looks healthy can have HIV.", "",
                 Arrays.asList("I do not stretch often, if ever", "1 day/week", "2 days/week", "3 or more days/week")));
-        surveyQuestions.add(new SurveyQuestion("How many days each week do you participate in strength-building or resistance training exercises? Each session needs to be at least 10 minutes in length.", "",
+
+        surveyQuestions.add(new SurveyQuestion("4. Puedes saber si tienes VIH sin hacer una prueba de VIH.\n\n" +
+                "4. You can know if you have HIV without an HIV test.", "",
+                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
+
+        surveyQuestions.add(new SurveyQuestion("5. Tener varias parejas al mismo tiempo aumenta el peligro de contagiarse del VIH y otras infecciones.\n\n" +
+                "5. Having several partners at the same time increases the danger of get HIV and other infections.", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
 
         /* Set current Progress to 0 */
@@ -167,7 +191,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             int valPresent = 0;
             for (final String name : surveyQuestions.get(0).getOption()) {
                 if (Arrays.asList(selection.substring(1, selection.length() - 1).split(", ")).contains(String.valueOf(valPresent))) {
-                    options.add(name + " : Yes?");
+                    options.add(name + " : True? Cierto?");
                 }
                 ++valPresent;
             }
@@ -178,27 +202,44 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         btnNext.setEnabled(true);
     }
 
+    /**
+     * Push Answers
+     */
     public void pushAnswersOnFirebase() {
-        /*
-        FirebaseDatabase.getInstance().getReference().child("survey").orderByChild("id")
-                .equalTo(AppUtils.createPathString(UserSingleton.USERINFO.getId()))
-                .limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    SurveyAnswer surveyAnswer = new SurveyAnswer(AppUtils.createPathString(UserSingleton.USERINFO.getId()), surveyQuestions);
-                    FirebaseDatabase.getInstance().getReference().child("survey").push().setValue(surveyAnswer);
-                }
+        /* Get Info */
+        String key = "";
+        Bundle b = getIntent().getExtras();
+        int step = b.getInt("S");
+        if (1 == step) {
+            key = "SR_RESP_SET_PRE";
+        } else {
+            key = "SR_RESP_SET_POST";
+        }
 
-                startActivity(new Intent(mContext, MainActivity.class));
-            }
+        /* Get Shared Preferences */
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+        SharedPreferences.Editor scoreEditor = prefs.edit();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        /* Get Responses */
+        Set<String> set = prefs.getStringSet(key, new HashSet<String>());
+        StringBuilder builder = new StringBuilder();
+        builder.append(new Date()).append(";");
+        builder.append(surveyQuestions.get(0).getOption()).append(";");
+        builder.append(surveyQuestions.get(0).getSelected()).append(";");
+        for (int i = 1; i < surveyQuestions.size(); i++) {
+            builder.append(surveyQuestions.get(i).getSelected()).append(";");
+        }
+        set.add(builder.toString());
+        scoreEditor.putStringSet(key, set);
+        scoreEditor.commit();
 
-            }
-        });
-        */
+        /* Finish */
+        if (1 == step) {
+            Intent i = new Intent(getApplicationContext(), SurveyStartActivity.class);
+            i.putExtra("S", 1);
+            startActivity(i);
+        }
+        finish();
     }
 
     /**
