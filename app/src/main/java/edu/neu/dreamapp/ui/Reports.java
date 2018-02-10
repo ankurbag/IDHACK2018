@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -94,7 +93,7 @@ public class Reports extends BaseFragment {
 
                 News n = new News();
                 n.setHeader("Survey Response");
-                n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
+                n.setAuthor("Date: " + values[0]);
                 n.setContent("Total Students: " + values[1].split(",").length
                         + "\n"
                         + "Students Present: " + values[2].split(",").length);
