@@ -140,35 +140,30 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         surveyQuestions = new ArrayList<>();
         /* Attendance */
         surveyQuestions.add(new SurveyQuestion("Attendance", "",
-                Arrays.asList("Peter", "Roger", "Harry", "Charlie")));
+                Arrays.asList("Adalquiris", "Jhon Olivo", "Elvis Manuel", "Elianny", "Adelyn Sanchez", "Samuel Arturo")));
 
         /* Questions */
-        surveyQuestions.add(new SurveyQuestion("Are you happy to be at\n" +
-                "this school?", "",
+        surveyQuestions.add(new SurveyQuestion("1. Tener relaciones sexuales con una persona mayor que t˙ (5 aÒos o·s) te pone en peligro de contagiarse del VIH.\n\n" +
+                "1. Have sex with a person older than you (5 years or\n" +
+                "more) puts you in danger of getting HIV.", "",
                 Arrays.asList("Excellent", "Good", "Fair", "Poor")));
-        surveyQuestions.add(new SurveyQuestion("Do you feel like you are\n" +
-                "part of this school?", "",
+
+        surveyQuestions.add(new SurveyQuestion("2. Los condones funcionan para prevenir el VIH/SIDA.\n\n" +
+                "2. Condoms work to prevent HIV / AIDS.", "",
                 Arrays.asList("I am not physically active", "less than 75 minutes", "75 - 149 minutes", "150 - 300 minutes", "more than 300 minutes")));
-        surveyQuestions.add(new SurveyQuestion("How many days per week do you participate in stretching exercises?", "",
+
+        surveyQuestions.add(new SurveyQuestion("3. Una persona que se ve sana puede tener el VIH.\n\n" +
+                "3. A person who looks healthy can have HIV.", "",
                 Arrays.asList("I do not stretch often, if ever", "1 day/week", "2 days/week", "3 or more days/week")));
-        surveyQuestions.add(new SurveyQuestion("Do adults at this school\n" +
-                "treat students with respect?", "",
+
+        surveyQuestions.add(new SurveyQuestion("4. Puedes saber si tienes VIH sin hacer una prueba de VIH.\n\n" +
+                "4. You can know if you have HIV without an HIV test.", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
 
-        surveyQuestions.add(new SurveyQuestion("Do other kids at this\n" +
-                "school spread mean rumors\n" +
-                "or lies about you?", "",
+        surveyQuestions.add(new SurveyQuestion("5. Tener varias parejas al mismo tiempo aumenta el peligro de contagiarse del VIH y otras infecciones.\n\n" +
+                "5. Having several partners at the same time increases the danger of get HIV and other infections.", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
-
-        surveyQuestions.add(new SurveyQuestion("Do other kids at this\n" +
-                "school ever tease you about\n" +
-                "the way you talk, walk, or\n" +
-                "dress?", "",
-                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
-
-        surveyQuestions.add(new SurveyQuestion("Relationships (including families, friendships, romantic relationships and dating)", "",
-                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
-
+        
         /* Set current Progress to 0 */
         progress = 0;
 
@@ -196,7 +191,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
             int valPresent = 0;
             for (final String name : surveyQuestions.get(0).getOption()) {
                 if (Arrays.asList(selection.substring(1, selection.length() - 1).split(", ")).contains(String.valueOf(valPresent))) {
-                    options.add(name + " : Yes?");
+                    options.add(name + " : True? Cierto?");
                 }
                 ++valPresent;
             }

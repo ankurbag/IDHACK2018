@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -15,7 +16,10 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import edu.neu.dreamapp.base.BaseActivity;
@@ -54,9 +58,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*
-        SharedPreferences prefs = getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
         SharedPreferences.Editor scoreEditor = prefs.edit();
-        scoreEditor.putStringSet("SR", null);
+        scoreEditor.putStringSet("SR_RESP_SET", null);
         scoreEditor.commit();
         */
     }
