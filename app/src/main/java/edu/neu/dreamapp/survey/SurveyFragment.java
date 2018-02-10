@@ -3,15 +3,17 @@ package edu.neu.dreamapp.survey;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import edu.neu.dreamapp.R;
 import edu.neu.dreamapp.base.BaseFragment;
 import edu.neu.dreamapp.model.SurveyQuestion;
+import edu.neu.dreamapp.widget.CheckBoxGroup;
 
 /**
  * @author agrawroh
@@ -25,8 +27,8 @@ public class SurveyFragment extends BaseFragment {
     @BindView(R.id.tvSubQuestion)
     TextView tvSubQuestion;
 
-    @BindView(R.id.radioGroup)
-    RadioGroup radioGroup;
+    @BindView(R.id.cbGroup)
+    CheckBoxGroup cbGroup;
 
     private SurveyQuestion surveyQuestion;
     private int previousCount = 0;
@@ -49,7 +51,7 @@ public class SurveyFragment extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
-
+        /* Do Nothing */
     }
 
     /**
@@ -76,37 +78,12 @@ public class SurveyFragment extends BaseFragment {
             tvSubQuestion.setText(surveyQuestion.getSubQuestion());
         }
 
-        /* Add first two radioButtons, the minimum of options is 2 */
-        addOptionButton(surveyQuestion.getOption().getOne());
-        addOptionButton(surveyQuestion.getOption().getTwo());
-
-        /* Add the extra options if exists */
-        if (!surveyQuestion.getOption().getThree().equals("")) {
-            addOptionButton(surveyQuestion.getOption().getThree());
-            if (!surveyQuestion.getOption().getFour().equals("")) {
-                addOptionButton(surveyQuestion.getOption().getFour());
-                if (!surveyQuestion.getOption().getFive().equals("")) {
-                    addOptionButton(surveyQuestion.getOption().getFive());
-                }
-            }
+        /* Add Options */
+        for (final String option : surveyQuestion.getOption()) {
+            addOptionButton(index, option, surveyQuestion.getSelected());
         }
-
-        /* Check the option that were selected before, if any */
-        if (surveyQuestion.getSelected() != 0) {
-            ((RadioButton) radioGroup.getChildAt(surveyQuestion.getSelected() - 1)).setChecked(true);
-        }
-
-        /* Set a new onCheckedChangeListener for radioGroup */
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int checkedID = radioGroup.getCheckedRadioButtonId();
-                checkedID -= previousCount;
-                selectionCallback.itemSelected(index, checkedID);
-            }
-        });
+        cbGroup.onAttachedToWindow();
     }
-
 
     /**
      * Called when loading the next Question
@@ -132,52 +109,41 @@ public class SurveyFragment extends BaseFragment {
             tvSubQuestion.setText(surveyQuestion.getSubQuestion());
         }
 
-        /* Add first two radioButtons, the minimum of options is 2 */
-        addOptionButton(surveyQuestion.getOption().getOne());
-        addOptionButton(surveyQuestion.getOption().getTwo());
-
-        /* Add the extra options if exists */
-        if (!surveyQuestion.getOption().getThree().equals("")) {
-            addOptionButton(surveyQuestion.getOption().getThree());
-            if (!surveyQuestion.getOption().getFour().equals("")) {
-                addOptionButton(surveyQuestion.getOption().getFour());
-                if (!surveyQuestion.getOption().getFive().equals("")) {
-                    addOptionButton(surveyQuestion.getOption().getFive());
-                }
-            }
+        /* Add Options */
+        for (final String option : surveyQuestion.getOption()) {
+            addOptionButton(index, option, surveyQuestion.getSelected());
         }
-
-        /* Check the option that were selected before, if any */
-        if (surveyQuestion.getSelected() != 0) {
-            ((RadioButton) radioGroup.getChildAt(surveyQuestion.getSelected() - 1)).setChecked(true);
-        }
-
-        /* Set a new onCheckedChangeListener for radioGroup */
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int checkedID = radioGroup.getCheckedRadioButtonId();
-                checkedID -= previousCount;
-                selectionCallback.itemSelected(index, checkedID);
-            }
-        });
+        cbGroup.onAttachedToWindow();
     }
-
 
     /**
      * Helper function for adding radioButton into radioGroup
      *
      * @param option Selected Option
      */
-    public void addOptionButton(String option) {
-        RadioButton radioButton = new RadioButton(context);
-        radioButton.setText(option);
-        radioButton.setTextSize(16);
-        radioButton.setTextColor(getResources().getColor(R.color.black));
-        radioButton.setPadding(10, 10, 10, 10);
-        radioGroup.addView(radioButton, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    public void addOptionButton(final int index, String option, String selected) {
+        CheckBox cb = new CheckBox(context);
+        cb.setTag(buttonCount);
+        if (null != selected) {
 
-        /* Increment buttonCount by 1 after adding a new radioButton */
+
+            
+            cb.setChecked(Arrays.asList(selected.substring(1, selected.length() - 1).split(", ")).contains(String.valueOf(buttonCount)));
+        }
+        cb.setText(option);
+        cb.setTextSize(16);
+        cb.setTextColor(getResources().getColor(R.color.black));
+        cb.setPadding(10, 10, 10, 10);
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                /* Select Item */
+                selectionCallback.itemSelected(index, cbGroup.getCheckedIds());
+            }
+        });
+        cbGroup.put(cb);
+
+        /* Increment Button Count */
         buttonCount++;
     }
 
@@ -185,26 +151,26 @@ public class SurveyFragment extends BaseFragment {
      * Helper function for removing out-of-date radioButtons
      */
     public void removeButtons() {
-
         /* First remove all child views in radioGroup */
-        radioGroup.removeAllViews();
+        cbGroup.refresh();
+        buttonCount = 0;
 
-        /* Overwrite onCheckedChangeListener for radioGroup and make it do nothing */
+        /* Overwrite onCheckedChangeListener for radioGroup and make it do nothing
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                /* Do nothing in order for assigning new one later on */
+                /* Do nothing in order for assigning new one later on
             }
         });
+        */
     }
-
 
     /**
      * Interface for communicating with SurveyActivity
      * for updating SurveyQuestion Selections
      */
     public interface SelectionCallback {
-        void itemSelected(int index, int selection);
+        void itemSelected(int index, String selection);
     }
 
     public void setSelectionCallback(SelectionCallback listener) {

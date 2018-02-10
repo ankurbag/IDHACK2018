@@ -23,11 +23,11 @@
         android:textSize="16sp"
         android:visibility="gone" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <edu.neu.dreamapp.widget.CheckBoxGroup
+        android:id="@+id/cbGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp" />
-
+        android:layout_marginRight="15dp"
+        android:columnCount="1" />
 </LinearLayout>

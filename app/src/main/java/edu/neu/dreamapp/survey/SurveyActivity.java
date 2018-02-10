@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -126,65 +127,15 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
     private void initQuestion() {
         surveyQuestions = new ArrayList<>();
         surveyQuestions.add(new SurveyQuestion("How are you feeling? In general, compared to 12 months ago, my health is...", "",
-                new SurveyQuestion.OptionBean("About the same", "Better", "Worse", "", "")));
+                Arrays.asList("About the same", "Better", "Worse")));
         surveyQuestions.add(new SurveyQuestion("How would you rate your overall health and wellness?", "",
-                new SurveyQuestion.OptionBean("Excellent", "Good", "Fair", "Poor", "")));
+                Arrays.asList("Excellent", "Good", "Fair", "Poor")));
         surveyQuestions.add(new SurveyQuestion("Counting sessions of at least 10 minutes, how many minutes of accumulated physical activity do you participate in weekly?", "",
-                new SurveyQuestion.OptionBean("I am not physically active", "less than 75 minutes", "75 - 149 minutes", "150 - 300 minutes", "more than 300 minutes")));
+                Arrays.asList("I am not physically active", "less than 75 minutes", "75 - 149 minutes", "150 - 300 minutes", "more than 300 minutes")));
         surveyQuestions.add(new SurveyQuestion("How many days per week do you participate in stretching exercises?", "",
-                new SurveyQuestion.OptionBean("I do not stretch often, if ever", "1 day/week", "2 days/week", "3 or more days/week", "")));
+                Arrays.asList("I do not stretch often, if ever", "1 day/week", "2 days/week", "3 or more days/week")));
         surveyQuestions.add(new SurveyQuestion("How many days each week do you participate in strength-building or resistance training exercises? Each session needs to be at least 10 minutes in length.", "",
-                new SurveyQuestion.OptionBean("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week", "")));
-        surveyQuestions.add(new SurveyQuestion("On a typical day, how many hours do you watch television, play video games or sit at a computer?", "",
-                new SurveyQuestion.OptionBean("About an hour or less", "Typically 2 - 3 hours", "4 hours or more", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Regarding your diet, which statement would be most accurate for you?", "",
-                new SurveyQuestion.OptionBean("Within the last 6 months, I have begun to eat more healthfully", "More than 6 months ago, I began eating more health-consciously", "I intend to begin eating better within the nest 6 months", "I am not considering any changes to my diet", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of Grains you intake daily", "(1 slice of bread, 1 cup oif ready-to-eat cereal, 1/2 cup cooked pasta, cooked rice and cooked cereal)",
-                new SurveyQuestion.OptionBean("I don't eat grains", "1 - 2 servings", "3 - 4 servings", "5 servings or more", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of Vegetable you intake daily", "(1 cup raw leafy vegetables (about the size of your fist), 1/2 cut-up raw or cooked vegetables or 1/2 cup of vegetable juice)",
-                new SurveyQuestion.OptionBean("I don't eat vegetables", "1 - 2 servings", "3 - 4 servings", "5 servings or more", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of Fruits you intake daily", "(1 medium fruit (about the size of a baseball), 1/2 cup of fresh, frozen or canned fruit, 1/2 cup of juice)",
-                new SurveyQuestion.OptionBean("I don't eat fruit", "1 - 2 servings", "3 - 4 servings", "5 servings or more", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of meats, poultry and seafood you intake daily", "(3 oz. cooked meat (about the size of a computer mouse), 3 oz. of grilled fish (about the size of a check))",
-                new SurveyQuestion.OptionBean("I don't eat meat, poultry, or seafood", "1 servings", "2 servings (6 oz.)", "3 servings or more (9 oz. or more)", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of nuts, seeds and legumes you intake daily", "(1/3 cup or 1 1/2 oz. of nuts, 2 Tbsp. of peanut butter, 2 Tbsp. of seeds, 1/2 cup of dry beans or peas)",
-                new SurveyQuestion.OptionBean("I don't eat nuts, seeds or legumes", "1 - 2 servings", "3 - 4 servings", "5 servings or more", "")));
-        surveyQuestions.add(new SurveyQuestion("Please mark how many servings of fats and oils you intake daily", "(1 tsp. soft margarine, 1 Tbsp. mayonnaise, 1 tsp. vegetable oil, 1 Tbsp. regular or 2 Tbsp. of low fat salad dressing)",
-                new SurveyQuestion.OptionBean("I try my best to avoid all fats and oils", "1 - 2 servings", "3 - 4 servings", "5 servings or more", "")));
-        surveyQuestions.add(new SurveyQuestion("On a typical day, how many sodas or sweet drinks do you have?", "(1 drink = 1 can or 12 oz.)",
-                new SurveyQuestion.OptionBean("None", "1 or 2", "3 or more", "", "")));
-        surveyQuestions.add(new SurveyQuestion("On average, how many hours of uninterrupted sleep do you get per night?", "",
-                new SurveyQuestion.OptionBean("< 4 hours", "5 - 6 hours", "7 - 8 hours", "9 hours or more", "")));
-        surveyQuestions.add(new SurveyQuestion("On a typical day, how much alcohol do you drink?", "(1 drink = 1 beer/1 glass of wine/1.5 oz. liquor)",
-                new SurveyQuestion.OptionBean("None", "1 drink/day", "2 drinks/day", "3 or more drinks/day", "")));
-        surveyQuestions.add(new SurveyQuestion("How would you describe your tobacco use?", "",
-                new SurveyQuestion.OptionBean("Still/currently user of tobacco", "Quit using tobacco less than 30 days ago", "Quit using tobacco 1 - 12 months ago", "Quit using tobacco more than 12 months ago", "Never used tobacco")));
-        surveyQuestions.add(new SurveyQuestion("Have you felt down, depressed, hopeless or had little interest or pleasure in activities for two or more weeks in the past month?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "", "", "")));
-        surveyQuestions.add(new SurveyQuestion("In the past year, how many days of work did you miss because of personal or health issues?", "(1 drink = 1 beer/1 glass of wine/1.5 oz. liquor)",
-                new SurveyQuestion.OptionBean("I haven't missed any work in the last year", "1-5 days", "6-10 days", "11-15 days", "16 days or more")));
-        surveyQuestions.add(new SurveyQuestion("In the last year, how often did your personal or health issues affect your productivity while you were working?", "",
-                new SurveyQuestion.OptionBean("My work hasn't really been affected", "Some of the time", "Most of the time", "All of the time", "")));
-        surveyQuestions.add(new SurveyQuestion("In general, how satisfied are you with your life", "",
-                new SurveyQuestion.OptionBean("Life's good! I'm very satisfied and happy", "Things are good. I am mostly satisfied", "Life is tough... I'm not very satisfied", "I'm dissatisfied/unhappy with my life", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you have a family doctor or Primary Care Physician (PCP) you see periodically?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "", "", "")));
-        surveyQuestions.add(new SurveyQuestion("How often do you feel stressed?", "",
-                new SurveyQuestion.OptionBean("Hardly ever", "Seldom - its rare but it happens", "Sometimes", "Often", "Always")));
-        surveyQuestions.add(new SurveyQuestion("Do you know your basic biometric values?", "(Blood Pressure, Cholesterol, Blood Sugar, etc.)",
-                new SurveyQuestion.OptionBean("Yes, I know my numbers", "No, not sure I could tell you my current biometric values", "I plan on paying more attention to this", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you currently have Asthma?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "I prefer not to respond to this question", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you currently have Diabetes?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "I prefer not to respond to this question", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you currently have Coronary Artery Disease?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "I prefer not to respond to this question", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you currently have Congestive Heart Failure?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "I prefer not to respond to this question", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Do you currently have Chronic Obstructive Pulmonary Disease(COPD)?", "",
-                new SurveyQuestion.OptionBean("Yes", "No", "I prefer not to respond to this question", "", "")));
-        surveyQuestions.add(new SurveyQuestion("Rate your organization's interest in employee health and in creating a healthy work place.", "",
-                new SurveyQuestion.OptionBean("Excellent - my employer goes above and beyond in creating a healthy work place.", "Good - my employer cares about creating a healthy culture", "Fair - my employer does an ok job of supporting a healthy culture", "Poor - it seems like my employer really doesn't care about creating a healthy workplace", "")));
+                Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
 
         /* Set current Progress to 0 */
         progress = 0;
@@ -206,7 +157,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
      * @param selection Selection
      */
     @Override
-    public void itemSelected(int index, int selection) {
+    public void itemSelected(int index, String selection) {
         surveyQuestions.get(index).setSelected(selection);
         btnNext.setEnabled(true);
     }
@@ -240,7 +191,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
      * @return Return Value
      */
     public boolean isChecked(int position) {
-        return surveyQuestions.get(position).getSelected() != 0;
+        return null != surveyQuestions.get(position).getSelected();
     }
 
     /**

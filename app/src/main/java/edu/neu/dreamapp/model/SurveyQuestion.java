@@ -1,5 +1,7 @@
 package edu.neu.dreamapp.model;
 
+import java.util.List;
+
 /**
  * @author agrawroh
  * @version v1.0
@@ -14,10 +16,10 @@ public class SurveyQuestion {
 
     private String question;
     private String subQuestion;
-    private OptionBean option;
-    private int selected;
+    private List<String> option;
+    private String selected;
 
-    public SurveyQuestion(String question, String subQuestion, OptionBean option) {
+    public SurveyQuestion(String question, String subQuestion, List<String> option) {
         this.question = question;
         this.subQuestion = subQuestion;
         this.option = option;
@@ -39,19 +41,19 @@ public class SurveyQuestion {
         return subQuestion;
     }
 
-    public OptionBean getOption() {
+    public List<String> getOption() {
         return option;
     }
 
-    public void setOption(OptionBean option) {
+    public void setOption(List<String> option) {
         this.option = option;
     }
 
-    public int getSelected() {
+    public String getSelected() {
         return selected;
     }
 
-    public void setSelected(int selected) {
+    public void setSelected(String selected) {
         this.selected = selected;
     }
 
