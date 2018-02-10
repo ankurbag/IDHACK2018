@@ -94,7 +94,7 @@ public class Reports extends BaseFragment {
 
                 News n = new News();
                 n.setHeader("Survey Response");
-                n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
+                //n.setAuthor("Date: " + new Date(Long.parseLong(values[0])));
                 n.setContent("Total Students: " + values[1].split(",").length
                         + "\n"
                         + "Students Present: " + values[2].split(",").length);
