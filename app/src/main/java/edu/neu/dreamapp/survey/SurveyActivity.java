@@ -126,8 +126,11 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
      */
     private void initQuestion() {
         surveyQuestions = new ArrayList<>();
-        surveyQuestions.add(new SurveyQuestion("How are you feeling? In general, compared to 12 months ago, my health is...", "",
-                Arrays.asList("About the same", "Better", "Worse")));
+        /* Attendance */
+        surveyQuestions.add(new SurveyQuestion("Attendance", "",
+                Arrays.asList("Peter", "Roger", "Harry", "Charlie")));
+
+        /* Questions */
         surveyQuestions.add(new SurveyQuestion("How would you rate your overall health and wellness?", "",
                 Arrays.asList("Excellent", "Good", "Fair", "Poor")));
         surveyQuestions.add(new SurveyQuestion("Counting sessions of at least 10 minutes, how many minutes of accumulated physical activity do you participate in weekly?", "",
@@ -159,6 +162,19 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
     @Override
     public void itemSelected(int index, String selection) {
         surveyQuestions.get(index).setSelected(selection);
+        if (0 == index) {
+            List<String> options = new ArrayList<>();
+            int valPresent = 0;
+            for (final String name : surveyQuestions.get(0).getOption()) {
+                if (Arrays.asList(selection.substring(1, selection.length() - 1).split(", ")).contains(String.valueOf(valPresent))) {
+                    options.add(name + " : Yes?");
+                }
+                ++valPresent;
+            }
+            for (int i = 1; i < surveyQuestions.size(); i++) {
+                surveyQuestions.get(i).setOption(options);
+            }
+        }
         btnNext.setEnabled(true);
     }
 
