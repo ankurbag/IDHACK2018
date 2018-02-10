@@ -151,7 +151,7 @@ public class Reports extends BaseFragment {
             }
             final String content = fileContent;
             String[] nums = news.get(i).getContent().split("\n");
-            String formattedContent = content.replace("[#DataTable#]", "['Attendance','Percentage'],['Present',"
+            final String formattedContent = content.replace("[#DataTable#]", "['Attendance','Percentage'],['Present',"
                     + Integer.parseInt(nums[0].split(": ")[1])
                     + "],['Absent',"
                     + Integer.parseInt(nums[1].split(": ")[1]) + "]");
@@ -169,11 +169,33 @@ public class Reports extends BaseFragment {
             newsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                    browserIntent.setData(Uri.parse(news.get(i).getUrl()));
-                    startActivity(browserIntent);
+                    sendEmail("agrawroh@bu.edu", "Report", formattedContent.replace("./loader.js", "https://www.gstatic.com/charts/loader.js"));
                 }
             });
+        }
+
+        /**
+         * Send Email
+         *
+         * @param recipient Recipient
+         * @param subject   Subject
+         * @param body      Body
+         */
+        protected void sendEmail(String recipient, String subject, String body) {
+            String[] recipients = {recipient.toString()};
+            Intent email = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+            email.setType("text/html");
+
+            email.putExtra(Intent.EXTRA_EMAIL, recipients);
+            email.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
+            email.putExtra(Intent.EXTRA_TEXT, body.toString());
+
+            try {
+                startActivity(Intent.createChooser(email, "Choose Email Client..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(getActivity().getApplicationContext(), "No Email Client Installed!",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override

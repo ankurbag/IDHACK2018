@@ -94,7 +94,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         surveyFragment = (SurveyFragment) getSupportFragmentManager().findFragmentById(R.id.surveyFragment);
         surveyFragment.setSelectionCallback(this);
 
-        btnNext.setEnabled(false);
+        btnNext.setEnabled(true);
 
         /* Next Question Button */
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +163,7 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         surveyQuestions.add(new SurveyQuestion("5. Tener varias parejas al mismo tiempo aumenta el peligro de contagiarse del VIH y otras infecciones.\n\n" +
                 "5. Having several partners at the same time increases the danger of get HIV and other infections.", "",
                 Arrays.asList("I do not typically weight-lift or resistance train", "1 day/week", "2 days/week", "3 or more days/week")));
-        
+
         /* Set current Progress to 0 */
         progress = 0;
 

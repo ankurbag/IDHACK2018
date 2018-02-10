@@ -10,6 +10,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +34,9 @@ public class Dashboard extends BaseFragment {
     private static final String CLASS_TAG = "Dashboard";
     private static final String ASSET_PATH = "file:///android_asset/";
 
+    @BindView(R.id.refreshLayout)
+    MaterialRefreshLayout refreshLayout;
+
     @BindView(R.id.wv1)
     WebView wv1;
 
@@ -49,6 +55,20 @@ public class Dashboard extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
+        /* Setup RefreshLayout Listener, When Page Refreshes, Load Again */
+        refreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+                /* Load Data */
+                loadData();
+            }
+        });
+
+        /* Auto Refreshes The Layout In-Order To Fetch The NEWS */
+        refreshLayout.autoRefresh();
+    }
+
+    private void loadData() {
         /* Read Chart HTML */
         String fileContent = "";
         try {
@@ -62,7 +82,7 @@ public class Dashboard extends BaseFragment {
         final String content = fileContent;
 
         SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
-        Set<String> set = prefs.getStringSet("SR_RESP_SET", new HashSet<String>());
+        Set<String> set = prefs.getStringSet("SR_RESP_SET_PRE", new HashSet<String>());
         if (0 < set.size()) {
             Map<String, String> map = new HashMap<>();
 
@@ -140,6 +160,8 @@ public class Dashboard extends BaseFragment {
                 break;
             }
         }
+
+        refreshLayout.finishRefresh();
     }
 
     private byte[] loadHTMLasByteArray(InputStream in) throws IOException {

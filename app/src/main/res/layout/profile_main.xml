@@ -24,5 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:text="Rohit Agrawal" />
+        android:text="Rohit Agrawal"
+        android:textSize="20sp" />
 </LinearLayout>
