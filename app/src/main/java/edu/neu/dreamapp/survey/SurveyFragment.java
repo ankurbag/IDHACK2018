@@ -125,9 +125,6 @@ public class SurveyFragment extends BaseFragment {
         CheckBox cb = new CheckBox(context);
         cb.setTag(buttonCount);
         if (null != selected) {
-
-
-            
             cb.setChecked(Arrays.asList(selected.substring(1, selected.length() - 1).split(", ")).contains(String.valueOf(buttonCount)));
         }
         cb.setText(option);
