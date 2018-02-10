@@ -1,7 +1,12 @@
 package edu.neu.dreamapp.ui;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
+import butterknife.BindView;
 import edu.neu.dreamapp.R;
 import edu.neu.dreamapp.base.BaseFragment;
 
@@ -12,9 +17,12 @@ import edu.neu.dreamapp.base.BaseFragment;
 public class Dashboard extends BaseFragment {
     private static final String CLASS_TAG = "Dashboard";
 
+    @BindView(R.id.webview)
+    WebView inAppBrowser;
+
     @Override
     public int getContentViewId() {
-        return R.layout.survey_main;
+        return R.layout.dashboard_main;
     }
 
     @Override
@@ -24,6 +32,22 @@ public class Dashboard extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
-        /* Do Nothing */
+       /* Load Survey */
+        inAppBrowser.setWebViewClient(new InAppBrowser());
+        inAppBrowser.getSettings().setLoadsImagesAutomatically(true);
+        inAppBrowser.getSettings().setJavaScriptEnabled(true);
+        inAppBrowser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        inAppBrowser.loadUrl("http://www.google.com/");
+    }
+
+    private class InAppBrowser extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+
+
     }
 }
