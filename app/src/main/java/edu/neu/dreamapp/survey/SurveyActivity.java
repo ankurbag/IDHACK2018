@@ -2,7 +2,9 @@ package edu.neu.dreamapp.survey;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -14,7 +16,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import edu.neu.dreamapp.MainActivity;
@@ -178,27 +182,25 @@ public class SurveyActivity extends BaseActivity implements SurveyFragment.Selec
         btnNext.setEnabled(true);
     }
 
+    /**
+     * Push Answers
+     */
     public void pushAnswersOnFirebase() {
-        /*
-        FirebaseDatabase.getInstance().getReference().child("survey").orderByChild("id")
-                .equalTo(AppUtils.createPathString(UserSingleton.USERINFO.getId()))
-                .limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    SurveyAnswer surveyAnswer = new SurveyAnswer(AppUtils.createPathString(UserSingleton.USERINFO.getId()), surveyQuestions);
-                    FirebaseDatabase.getInstance().getReference().child("survey").push().setValue(surveyAnswer);
-                }
+        SharedPreferences prefs = getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+        SharedPreferences.Editor scoreEditor = prefs.edit();
 
-                startActivity(new Intent(mContext, MainActivity.class));
-            }
+        /* Get Responses */
+        Set<String> set = prefs.getStringSet("SR", new HashSet<String>());
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i < surveyQuestions.size(); i++) {
+            builder.append(surveyQuestions.get(i).getSelected()).append(";");
+        }
+        set.add(builder.toString());
+        scoreEditor.putStringSet("SR", set);
+        scoreEditor.commit();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        */
+        /* Finish */
+        finish();
     }
 
     /**

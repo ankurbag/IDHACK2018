@@ -1,9 +1,30 @@
 package edu.neu.dreamapp.ui;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import butterknife.BindView;
 import edu.neu.dreamapp.R;
 import edu.neu.dreamapp.base.BaseFragment;
+import edu.neu.dreamapp.model.News;
 
 /**
  * @author agrawroh
@@ -12,9 +33,15 @@ import edu.neu.dreamapp.base.BaseFragment;
 public class Reports extends BaseFragment {
     private static final String CLASS_TAG = "Reports";
 
+    @BindView(R.id.news_list)
+    RecyclerView rv;
+
+    @BindView(R.id.refreshLayout)
+    MaterialRefreshLayout refreshLayout;
+
     @Override
     public int getContentViewId() {
-        return R.layout.survey_main;
+        return R.layout.reports_main;
     }
 
     @Override
@@ -24,6 +51,105 @@ public class Reports extends BaseFragment {
 
     @Override
     protected void initAllMembersView(Bundle savedInstanceState) {
-        /* Do Nothing */
+
+
+        /* Setup RefreshLayout Listener, When Page Refreshes, Load Again */
+        refreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+            @Override
+            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+                rv.setLayoutManager(new LinearLayoutManager(context));
+                SharedPreferences prefs = getActivity().getSharedPreferences("DREAM_APP_CXT", Context.MODE_PRIVATE);
+                SharedPreferences.Editor scoreEditor = prefs.edit();
+
+                /* Get Responses */
+                Set<String> set = prefs.getStringSet("SR", null);
+                if (null != set) {
+                    List<News> newsRecords = new ArrayList<>();
+
+                    /* Iterate Surveys */
+                    for (final String value : set) {
+                        News n = new News();
+                        n.setHeader("Survey Response");
+                        n.setAuthor("Date: 2/10/2018");
+                        n.setContent(value);
+                        newsRecords.add(n);
+                    }
+                    rv.setAdapter(new Reports.NewsListAdapter(newsRecords));
+                }
+            }
+        });
+
+        /* Auto Refreshes The Layout In-Order To Fetch The NEWS */
+        refreshLayout.autoRefresh();
+    }
+
+    /**
+     * News List Adapter
+     */
+    class NewsListAdapter extends RecyclerView.Adapter<Reports.NewsViewHolder> {
+        private final List<News> news;
+
+        NewsListAdapter(List<News> news) {
+            this.news = news;
+        }
+
+        @Override
+        public Reports.NewsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+            View v = layoutInflater.inflate(R.layout.news_card, viewGroup, false);
+            return new Reports.NewsViewHolder(v);
+        }
+
+        @Override
+        @SuppressWarnings("all")
+        public void onBindViewHolder(Reports.NewsViewHolder newsViewHolder, final int i) {
+            /* Set Attributes */
+            if (null != news.get(i).getImage() && !"".equalsIgnoreCase(news.get(i).getImage())) {
+                Picasso.with(getActivity().getApplicationContext()).load(news.get(i).getImage()).resize(135, 135).centerCrop().into(newsViewHolder.newsImage);
+            }
+            newsViewHolder.newsHeader.setText(news.get(i).getHeader());
+            newsViewHolder.newsAuthor.setText(news.get(i).getAuthor());
+            newsViewHolder.newsContent.setText(news.get(i).getContent());
+
+            /* Add Listener */
+            newsViewHolder.holder.setBackground(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.selector_new_card_white));
+            newsViewHolder.newsHeader.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.app_black));
+            newsViewHolder.newsAuthor.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.app_black));
+            newsViewHolder.newsContent.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.app_black));
+
+            newsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                    browserIntent.setData(Uri.parse(news.get(i).getUrl()));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return news.size();
+        }
+    }
+
+    /**
+     * News View Holder
+     */
+    class NewsViewHolder extends RecyclerView.ViewHolder {
+        private ImageView newsImage;
+        private TextView newsHeader;
+        private TextView newsAuthor;
+        private TextView newsContent;
+        private View holder;
+
+        NewsViewHolder(View itemView) {
+            super(itemView);
+            holder = itemView.findViewById(R.id.holder);
+            newsImage = itemView.findViewById(R.id.news_image);
+            newsHeader = itemView.findViewById(R.id.news_header);
+            newsAuthor = itemView.findViewById(R.id.news_author);
+            newsContent = itemView.findViewById(R.id.news_body);
+        }
     }
 }

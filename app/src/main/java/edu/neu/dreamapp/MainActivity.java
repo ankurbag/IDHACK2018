@@ -1,6 +1,5 @@
 package edu.neu.dreamapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import edu.neu.dreamapp.base.BaseActivity;
-import edu.neu.dreamapp.survey.SurveyActivity;
 import edu.neu.dreamapp.ui.Dashboard;
 import edu.neu.dreamapp.ui.Profile;
 import edu.neu.dreamapp.ui.Reports;
@@ -53,7 +51,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(getApplicationContext(), SurveyActivity.class));
     }
 
     @Override
