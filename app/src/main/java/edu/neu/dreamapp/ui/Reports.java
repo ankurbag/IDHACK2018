@@ -100,6 +100,7 @@ public class Reports extends BaseFragment {
                 newsRecords.add(n);
             }
             rv.setAdapter(new Reports.NewsListAdapter(newsRecords));
+            rv.notifyAll();
             refreshLayout.finishRefresh();
         }
     }
